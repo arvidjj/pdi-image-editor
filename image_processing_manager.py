@@ -5,7 +5,7 @@ class ImageProcessingManager():
   """
     Esta libreria contiene la implementación de los procesos internos del
     Editor de Imagenes.
-    Desarrollador por: 
+    Desarrollador por: Angel Ojeda
   """
 
   DEFAULT_WIDTH = 512
@@ -64,7 +64,10 @@ class ImageProcessingManager():
 
       Obs: No te olvides de vaciar las colecciones antes de cargar la imagen.
     """
-    image = cv2.imread(image_path, 0)
+    # TU IMPLEMENTACION AQUI
+    self.stack_images.clear() #vaciar la pila
+
+    image = cv2.imread(image_path) #leo la iamgen en color
     resized_image = cv2.resize(image, (self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT))
     self.stack_images.append(resized_image)
 
@@ -74,12 +77,16 @@ class ImageProcessingManager():
     """
     # TU IMPLEMENTACION AQUI
     new_image = self.stack_images[-1]
+    #si el nombre de la imagen no incluye extension png o jpg, se le agrega
+    if not filename.endswith('.png') and not filename.endswith('.jpg'):
+      filename += '.png'
     cv2.imwrite(filename, new_image)
 
   def undo_changes(self):
     """
       Eliminamos el ultimo elemento guardado.
     """
+    # TU IMPLEMENTACION AQUI
     self.stack_images.pop()
 
 
@@ -88,7 +95,7 @@ class ImageProcessingManager():
       Guardamos informacion de los puntos aqui en self.stack_lines.
     """
     # TU IMPLEMENTACION AQUI
-    pass
+    self.stack_lines.append([x1, y1, x2, y2, line_width, color])
 
 
   def add_lines_to_image(self):
@@ -103,7 +110,14 @@ class ImageProcessingManager():
       Ayuda 3: utilizar el metodo rgb_to_hex para convertir los colores
     """
     # TU IMPLEMENTACION AQUI
-    pass
+    #TODO: no funciona
+    nueva_imagen = self.stack_images[-1].copy()
+    for linea in self.stack_lines:
+        x1, y1, x2, y2, line_width, rgb_color = linea
+        color_hex = self.rgb_to_hex(rgb_color)  
+        cv2.line(nueva_imagen, (x1, y1), (x2, y2), color_hex, line_width)  
+    self.stack_images.append(nueva_imagen)
+    self.stack_lines = []
 
   def black_and_white_image(self):
     """
@@ -114,6 +128,7 @@ class ImageProcessingManager():
     """
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
+    last = cv2.cvtColor(last, cv2.COLOR_BGR2GRAY)
     return last
 
   def negative_image(self):
@@ -123,9 +138,9 @@ class ImageProcessingManager():
       Guardamos a la estructura self.stack_images
       Retornamos la imagen procesada.
     """
-
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
+    last = 255 - last
     return last
 
   def global_equalization_image(self):
@@ -135,9 +150,12 @@ class ImageProcessingManager():
       Guardamos a la estructura self.stack_images
       Retornamos la imagen procesada.
     """
-
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
+    last_ycrcb = cv2.cvtColor(last, cv2.COLOR_BGR2YCrCb)
+    last_ycrcb[:,:,0] = cv2.equalizeHist(last_ycrcb[:,:,0])
+    last = cv2.cvtColor(last_ycrcb, cv2.COLOR_YCrCb2BGR)
+    last = cv2.cvtColor(last, cv2.COLOR_BGR2RGB)
     return last
 
   def CLAHE_equalization_image(self, grid=(8, 8), clipLimit=2.0):
