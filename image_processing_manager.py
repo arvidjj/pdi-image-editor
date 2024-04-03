@@ -64,20 +64,23 @@ class ImageProcessingManager():
 
       Obs: No te olvides de vaciar las colecciones antes de cargar la imagen.
     """
-    pass
+    image = cv2.imread(image_path, 0)
+    resized_image = cv2.resize(image, (self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT))
+    self.stack_images.append(resized_image)
 
   def save_image(self, filename):
     """
        Guardamos la ultima imagen
     """
     # TU IMPLEMENTACION AQUI
-    pass
+    new_image = self.stack_images[-1]
+    cv2.imwrite(filename, new_image)
 
   def undo_changes(self):
     """
       Eliminamos el ultimo elemento guardado.
     """
-    pass
+    self.stack_images.pop()
 
 
   def save_points(self, x1, y1, x2, y2, line_width, color):
