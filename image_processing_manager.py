@@ -117,11 +117,11 @@ class ImageProcessingManager():
     """
     # TU IMPLEMENTACION AQUI
     #TODO: no funciona
-    nueva_imagen = self.stack_images[-1].copy()
+    nueva_imagen = self.stack_images[-1].copy() #crear nueva imagen con la nueva linea a partir de la ultima imagen guardad en el stack
     for linea in self.stack_lines:
         x1, y1, x2, y2, line_width, rgb_color = linea
-        color_hex = self.rgb_to_hex(rgb_color)
-        cv2.line(nueva_imagen, (x1, y1), (x2, y2), color_hex, int(line_width))  
+        color_hex = self.rgb_to_hex(rgb_color) #pasar de hex a rgb el color
+        cv2.line(nueva_imagen, (x1, y1), (x2, y2), color_hex, int(line_width)) #hay que convertir a integer algunos valores
     self.stack_images.append(nueva_imagen)
     self.stack_lines = []
 
