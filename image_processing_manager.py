@@ -29,7 +29,13 @@ class ImageProcessingManager():
       Conversor de un string hexadecimal a arreglos.
       Fuente: https://www.codespeedy.com/convert-rgb-to-hex-color-code-in-python/
     """
-    return '%02x%02x%02x' % rgb
+    #print(rgb)
+    #return '%02x%02x%02x' % rgb
+    rgb = rgb.lstrip('#')
+    length = len(rgb)
+    rgb = tuple(int(rgb[i:i+length//3], 16) for i in range(0, length, length//3))
+    return rgb
+
 
   def last_image(self):
     """
@@ -67,7 +73,7 @@ class ImageProcessingManager():
     # TU IMPLEMENTACION AQUI
     self.stack_images.clear() #vaciar la pila
 
-    image = cv2.imread(image_path) #leo la iamgen en color
+    image = cv2.imread(image_path) #leo la iamgen en c  olor
     resized_image = cv2.resize(image, (self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT))
     self.stack_images.append(resized_image)
 
@@ -114,8 +120,8 @@ class ImageProcessingManager():
     nueva_imagen = self.stack_images[-1].copy()
     for linea in self.stack_lines:
         x1, y1, x2, y2, line_width, rgb_color = linea
-        color_hex = self.rgb_to_hex(rgb_color)  
-        cv2.line(nueva_imagen, (x1, y1), (x2, y2), color_hex, line_width)  
+        color_hex = self.rgb_to_hex(rgb_color)
+        cv2.line(nueva_imagen, (x1, y1), (x2, y2), color_hex, int(line_width))  
     self.stack_images.append(nueva_imagen)
     self.stack_lines = []
 
