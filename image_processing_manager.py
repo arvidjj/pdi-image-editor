@@ -31,6 +31,7 @@ class ImageProcessingManager():
     """
     #print(rgb)
     #return '%02x%02x%02x' % rgb
+    #se tuvo que modificar la funcion para que aceptara un string
     rgb = rgb.lstrip('#')
     length = len(rgb)
     rgb = tuple(int(rgb[i:i+length//3], 16) for i in range(0, length, length//3))
@@ -116,7 +117,6 @@ class ImageProcessingManager():
       Ayuda 3: utilizar el metodo rgb_to_hex para convertir los colores
     """
     # TU IMPLEMENTACION AQUI
-    #TODO: no funciona
     nueva_imagen = self.stack_images[-1].copy() #crear nueva imagen con la nueva linea a partir de la ultima imagen guardad en el stack
     for linea in self.stack_lines:
         x1, y1, x2, y2, line_width, rgb_color = linea
@@ -173,6 +173,11 @@ class ImageProcessingManager():
     """
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
+    last_ycrcb = cv2.cvtColor(last, cv2.COLOR_BGR2YCrCb)
+    clahe = cv2.createCLAHE(clipLimit=clipLimit, tileGridSize=grid) #crear objeto clahe
+    last_ycrcb[:,:,0] = clahe.apply(last_ycrcb[:,:,0]) #aplicar clahe a la imagen
+    last = cv2.cvtColor(last_ycrcb, cv2.COLOR_YCrCb2BGR)
+    last = cv2.cvtColor(last, cv2.COLOR_BGR2RGB)
     return last
 
   def contrast_and_brightness_processing_image(self, alpha, beta):
@@ -193,4 +198,5 @@ class ImageProcessingManager():
     """
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
+    last = cv2.convertScaleAbs(last, alpha=alpha, beta=beta) #basic linear transform, opencv
     return last
