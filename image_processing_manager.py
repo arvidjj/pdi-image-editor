@@ -146,7 +146,8 @@ class ImageProcessingManager():
     """
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
-    last = 255 - last
+    #last = abs(255-last) #
+    last = cv2.bitwise_not(last)
     return last
 
   def global_equalization_image(self):
