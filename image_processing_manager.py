@@ -62,6 +62,12 @@ class ImageProcessingManager():
       elementos de la pila.
     """
     return len(self.stack_images) > 1
+  
+  def save_image_to_stack(self, image):
+    """
+      Guardamos una imagen en la pila.
+    """
+    self.stack_images.append(image)
 
   def add_image(self, image_path):
     """
@@ -76,7 +82,7 @@ class ImageProcessingManager():
 
     image = cv2.imread(image_path) #leo la iamgen en c  olor
     resized_image = cv2.resize(image, (self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT))
-    self.stack_images.append(resized_image)
+    self.save_image_to_stack(resized_image) #guardar la imagen en la pila
 
   def save_image(self, filename):
     """
@@ -122,7 +128,7 @@ class ImageProcessingManager():
         x1, y1, x2, y2, line_width, rgb_color = linea
         color_hex = self.rgb_to_hex(rgb_color) #pasar de hex a rgb el color
         cv2.line(nueva_imagen, (x1, y1), (x2, y2), color_hex, int(line_width)) #hay que convertir a integer algunos valores
-    self.stack_images.append(nueva_imagen)
+    self.save_image_to_stack(nueva_imagen) #guardar la imagen en la pila
     self.stack_lines = []
 
   def black_and_white_image(self):
@@ -135,6 +141,7 @@ class ImageProcessingManager():
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
     last = cv2.cvtColor(last, cv2.COLOR_BGR2GRAY)
+    self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
 
   def negative_image(self):
@@ -148,6 +155,7 @@ class ImageProcessingManager():
     # TU IMPLEMENTACION AQUI
     #last = abs(255-last) #
     last = cv2.bitwise_not(last)
+    self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
 
   def global_equalization_image(self):
@@ -163,6 +171,7 @@ class ImageProcessingManager():
     last_ycrcb[:,:,0] = cv2.equalizeHist(last_ycrcb[:,:,0])
     last = cv2.cvtColor(last_ycrcb, cv2.COLOR_YCrCb2BGR)
     last = cv2.cvtColor(last, cv2.COLOR_BGR2RGB)
+    self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
 
   def CLAHE_equalization_image(self, grid=(8, 8), clipLimit=2.0):
@@ -179,6 +188,7 @@ class ImageProcessingManager():
     last_ycrcb[:,:,0] = clahe.apply(last_ycrcb[:,:,0]) #aplicar clahe a la imagen
     last = cv2.cvtColor(last_ycrcb, cv2.COLOR_YCrCb2BGR)
     last = cv2.cvtColor(last, cv2.COLOR_BGR2RGB)
+    self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
 
   def contrast_and_brightness_processing_image(self, alpha, beta):
@@ -200,4 +210,5 @@ class ImageProcessingManager():
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
     last = cv2.convertScaleAbs(last, alpha=alpha, beta=beta) #basic linear transform, opencv
+    self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
