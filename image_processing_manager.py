@@ -141,6 +141,7 @@ class ImageProcessingManager():
     last = self.stack_images[-1].copy()
     # TU IMPLEMENTACION AQUI
     last = cv2.cvtColor(last, cv2.COLOR_BGR2GRAY)
+    last = cv2.cvtColor(last, cv2.COLOR_GRAY2BGR)
     self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
 
