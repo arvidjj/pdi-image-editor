@@ -77,10 +77,8 @@ class ImageProcessingManager():
 
       Obs: No te olvides de vaciar las colecciones antes de cargar la imagen.
     """
-    # TU IMPLEMENTACION AQUI
     self.stack_images.clear() #vaciar la pila
-
-    image = cv2.imread(image_path) #leo la iamgen en c  olor
+    image = cv2.imread(image_path) #leo la iamgen en color
     resized_image = cv2.resize(image, (self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT))
     self.save_image_to_stack(resized_image) #guardar la imagen en la pila
 
@@ -88,7 +86,6 @@ class ImageProcessingManager():
     """
        Guardamos la ultima imagen
     """
-    # TU IMPLEMENTACION AQUI
     new_image = self.stack_images[-1]
     #si el nombre de la imagen no incluye extension png o jpg, se le agrega
     if not filename.endswith('.png') and not filename.endswith('.jpg'):
@@ -99,15 +96,14 @@ class ImageProcessingManager():
     """
       Eliminamos el ultimo elemento guardado.
     """
-    # TU IMPLEMENTACION AQUI
     self.stack_images.pop()
+    #self.stack_lines.clear()
 
 
   def save_points(self, x1, y1, x2, y2, line_width, color):
     """
       Guardamos informacion de los puntos aqui en self.stack_lines.
     """
-    # TU IMPLEMENTACION AQUI
     self.stack_lines.append([x1, y1, x2, y2, line_width, color])
 
 
@@ -122,7 +118,6 @@ class ImageProcessingManager():
       Ayuda 2: no se olviden de limpiar self.stack_lines
       Ayuda 3: utilizar el metodo rgb_to_hex para convertir los colores
     """
-    # TU IMPLEMENTACION AQUI
     nueva_imagen = self.stack_images[-1].copy() #crear nueva imagen con la nueva linea a partir de la ultima imagen guardad en el stack
     for linea in self.stack_lines:
         x1, y1, x2, y2, line_width, rgb_color = linea
@@ -139,7 +134,6 @@ class ImageProcessingManager():
       Retornamos la imagen procesada.
     """
     last = self.stack_images[-1].copy()
-    # TU IMPLEMENTACION AQUI
     last = cv2.cvtColor(last, cv2.COLOR_BGR2GRAY)
     last = cv2.cvtColor(last, cv2.COLOR_GRAY2BGR)
     self.save_image_to_stack(last) #guardar la imagen en la pila
@@ -153,7 +147,6 @@ class ImageProcessingManager():
       Retornamos la imagen procesada.
     """
     last = self.stack_images[-1].copy()
-    # TU IMPLEMENTACION AQUI
     #last = abs(255-last) #
     last = cv2.bitwise_not(last)
     self.save_image_to_stack(last) #guardar la imagen en la pila
@@ -167,7 +160,6 @@ class ImageProcessingManager():
       Retornamos la imagen procesada.
     """
     last = self.stack_images[-1].copy()
-    # TU IMPLEMENTACION AQUI
     last_ycrcb = cv2.cvtColor(last, cv2.COLOR_BGR2YCrCb)
     last_ycrcb[:,:,0] = cv2.equalizeHist(last_ycrcb[:,:,0])
     last = cv2.cvtColor(last_ycrcb, cv2.COLOR_YCrCb2BGR)
@@ -183,7 +175,6 @@ class ImageProcessingManager():
       Retornamos la imagen procesada.
     """
     last = self.stack_images[-1].copy()
-    # TU IMPLEMENTACION AQUI
     last_ycrcb = cv2.cvtColor(last, cv2.COLOR_BGR2YCrCb)
     clahe = cv2.createCLAHE(clipLimit=clipLimit, tileGridSize=grid) #crear objeto clahe
     last_ycrcb[:,:,0] = clahe.apply(last_ycrcb[:,:,0]) #aplicar clahe a la imagen
@@ -209,7 +200,6 @@ class ImageProcessingManager():
       https://docs.opencv.org/2.4/modules/core/doc/operations_on_arrays.html#convertscaleabs
     """
     last = self.stack_images[-1].copy()
-    # TU IMPLEMENTACION AQUI
     last = cv2.convertScaleAbs(last, alpha=alpha, beta=beta) #basic linear transform, opencv
     self.save_image_to_stack(last) #guardar la imagen en la pila
     return last
