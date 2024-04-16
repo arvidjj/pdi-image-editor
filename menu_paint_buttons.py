@@ -214,6 +214,8 @@ class MenuAction(Frame):
     self.canvas = canvas
     self.img_processing_manager = img_processing_manager
     self.init()
+    #Shortcuts
+    self.root.bind("<Control-z>", self.undo_image)
 
   def init(self):
     Style().configure("TButton", margin=(50, 20, 50, 20), font='serif 10' )
@@ -232,7 +234,7 @@ class MenuAction(Frame):
   def save_image(self):
     FileManager.save_image(self.root, self.canvas, self.img_processing_manager)
 
-  def undo_image(self):
+  def undo_image(self, event=None):
     print('can undo', self.img_processing_manager.can_undo())
     if self.img_processing_manager.can_undo():
       list_lines = self.canvas.pop()
